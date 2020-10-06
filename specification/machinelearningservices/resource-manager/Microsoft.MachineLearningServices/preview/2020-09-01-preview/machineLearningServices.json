@@ -1156,6 +1156,58 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/workspaces/{workspaceName}/computes/{computeName}/updateDataMountSettings": {
+      "post": {
+        "tags": [
+          "OperationalizationClusters",
+          "MachineLearningComputes"
+        ],
+        "operationId": "MachineLearningCompute_UpdateDataMountSettings",
+        "description": "Update data mount settings on compute instance",
+        "x-ms-examples": {
+          "Update data mount settings for ComputeInstance": {
+            "$ref": "./examples/updateDataMountSettings.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/WorkspaceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ComputeNameParameter"
+          },
+          {
+            "$ref": "#/parameters/APIVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DataMountUpdateParameters"
+            },
+            "description": "Data mount update parameters."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/MachineLearningServiceError"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.MachineLearningServices/workspaces/skus": {
       "get": {
         "tags": [
@@ -3240,6 +3292,12 @@
                   "description": "The last operation on ComputeInstance.",
                   "$ref": "#/definitions/ComputeInstanceLastOperation",
                   "readOnly": true
+                },
+                "dataMountSettings": {                  
+                  "type": "array",
+                  "readOnly": true,
+                  "description": "Data mount settings for ComputeInstance.",
+                  "$ref": "#/definitions/ComputeInstanceDataMount"
                 }
               }
             }
@@ -3588,6 +3646,18 @@
         }
       },
       "description": "AmlCompute update parameters."
+    },
+    "DataMountUpdateParameters": {
+      "properties": {
+        "value": {
+          "description": "Data Mount settings.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComputeInstanceDataMount"
+          }
+        }
+      },
+      "description": "Data mount update parameters."
     },
     "ComputeNodesInformation": {
       "type": "object",
@@ -6016,6 +6086,86 @@
       "required": [
         "objectId",
         "tenantId"
+      ]
+    },
+    "ComputeInstanceDataMount": {
+      "type": "object",
+      "description": "Represents specification for data source requested to be mounted on the compute as well as its mounting status.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the data source to be mounted on the compute."
+        },        
+        "id": {
+          "type": "string",
+          "description": "Identifier of the data source to be mounted on the compute."
+        },
+        "dataSourcetype": {
+          "type": "string",
+          "description": "Type of the data source to be mounted on the compute.",
+          "enum": [
+            "Datastore",
+            "Dataset",
+            "Uri"
+          ],
+          "x-ms-enum": {
+            "name": "dataSourceType",
+            "modelAsString": true
+          }
+        },
+        "mountPath": {
+          "type": "string",
+          "description": "Path of the mount on the compute."
+        },        
+        "mountAction": {
+          "type": "string",
+          "description": "Mount action type.",
+          "enum": [
+            "Mount",
+            "Unmount"
+          ],
+          "x-ms-enum": {
+            "name": "mountAction",
+            "modelAsString": true
+          }
+        },
+        "state": {
+          "type": "string",
+          "description": "Current state of the mount on the compute.",
+          "enum": [
+            "MountRequested",
+            "Mounted",
+            "MountFailed",
+            "UnmountRequested",
+            "UnmountFailed"
+          ],
+          "x-ms-enum": {
+            "name": "dataMountState",
+            "modelAsString": true
+          },
+          "readOnly": true
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The date and time when the data was mounted on Compute.",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "errors": {
+          "readOnly": true,
+          "title": "Errors.",
+          "description": "Collection of errors encountered on this ComputeInstance mount.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MachineLearningServiceError"
+          }
+        }
+      },       
+      "required": [
+        "name",
+        "id",
+        "type",
+        "mountAction"
       ]
     }
   }

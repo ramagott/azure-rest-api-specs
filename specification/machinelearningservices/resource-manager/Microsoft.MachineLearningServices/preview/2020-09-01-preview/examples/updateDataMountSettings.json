@@ -1,0 +1,32 @@
+{
+  "parameters": {
+    "subscriptionId": "34adfa4f-cedf-4dc0-ba29-b6d1a69ab345",
+    "resourceGroupName": "testrg123",
+    "workspaceName": "workspaces123",
+    "computeName": "compute123",
+    "api-version": "2020-09-01-preview",
+    "parameters": {
+      "value": [
+        {
+          "name": "datastore1",
+          "dataSourceType": "Datastore",
+          "mountType": "Mount"
+        },
+        {
+          "name": "dataset1",
+          "dataSourceType": "Dataset",
+          "mountType": "Unmount"
+        },
+        {
+          "name": "sample_data",
+          "dataSourceType": "Uri",
+          "id": "https://storagesamples.blob.core.windows.net/sample-container/data.txt",
+          "mountType": "Mount"
+        }
+      ]
+    }
+  },
+  "responses": {
+    "200": {}
+  }
+}
